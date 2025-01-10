@@ -319,7 +319,7 @@ class NMI_Gateway_Woocommerce_Payment_Method_Handler extends NMI_Gateway_Woocomm
 			return $order;
 		}
 
-		if ( ( $order->get_customer_id() && $gateway->tokenization_enabled() ) || $gateway->should_force_tokenize() ) { //Logged in user
+		if ( ( $order->get_customer_id() && $gateway->supports_tokenization() && $gateway->tokenization_enabled() ) || $gateway->should_force_tokenize() ) { //Logged in user
 
 			$js_response     = isset( $_POST['xl_wc_nmi_js_response'] ) ? json_decode( stripslashes( $_POST['xl_wc_nmi_js_response'] ), true ) : [];
 			$card_data       = ( isset( $js_response['card'] ) && is_array( $js_response['card'] ) ) ? $js_response['card'] : [];

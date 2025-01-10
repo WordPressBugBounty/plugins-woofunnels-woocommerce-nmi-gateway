@@ -82,7 +82,7 @@ class NMI_Gateway_Woocommerce_Credit_Card extends NMI_Gateway_Woocommerce_Base {
 		) );
 
 		//Removing subscriptions support when tokenization is disabled
-		if ( ! $this->tokenization_enabled() ) {
+		if ( $this->supports_tokenization() && ! $this->tokenization_enabled()  ) {
 			$this->supports = array(
 				self::FEATURE_PRODUCTS,
 				//self::INTEGRATION_SUBSCRIPTIONS,

@@ -58,6 +58,7 @@ class SV_WC_DateTime extends \DateTime {
 	 * @since 4.6.0
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange] // Suppresses warnings in newer PHP versions
 	public function getTimestamp() {
 
 		return method_exists( 'DateTime', 'getTimestamp' ) ? parent::getTimestamp() : $this->format( 'U' );

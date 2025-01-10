@@ -5,7 +5,7 @@
  * Description: Receive credit card payments using NMI (Network Merchants) Gateway with subscription support. A valid SSL certificate (for security reasons) is required for this gateway to function. Requires PHP 7.0+
  * Author: XLPlugins
  * Author URI: https://xlplugins.com/
- * Version: 2.3.1
+ * Version: 2.4.0
  * Text Domain: woofunnels-woocommerce-nmi-gateway
  * Domain Path: /i18n/languages/
  *
@@ -16,9 +16,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Requires at least: 5.0
- * Tested up to: 6.3.1
+ * Tested up to: 6.7.1
  * WC requires at least: 4.0.0
- * WC tested up to: 8.1.0
+ * WC tested up to: 9.5.2
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -217,12 +217,23 @@ class NMI_Gateway_Woocommerce_Loader {
 
 		// load the main plugin class
 		require_once( plugin_dir_path( __FILE__ ) . 'class-nmi-gateway-woocommerce.php' ); // TODO: main plugin class file
+		add_action( 'before_woocommerce_init', [ $this, 'declare_hpos_compatibility' ] );
 
 
 		// fire it up!
 		nmi_gateway_woocommerce_cc();
 	}
-
+	/**
+	 * This method declared ours compat with the HPOS mechanism
+	 *
+	 * @return void
+	 * @since 3.6.3
+	 */
+	public function declare_hpos_compatibility() {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
 
 	/**
 	 * Loads the base framework classes.

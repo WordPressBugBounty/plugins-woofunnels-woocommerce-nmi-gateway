@@ -213,6 +213,9 @@ class NMI_Gateway_Woocommerce_API_Transaction_Request extends NMI_Gateway_Woocom
 
 		NMI_Gateway_Woocommerce_Logger::log( "Set payment method: $customer_vault_id, NMI CSC: $nmi_csc, XL nmi js token: $xl_nmi_js_token, token id: $token_id" );
 
+		$token_id = ( empty( $customer_vault_id ) && 'new' === $token_id ) ? '' : $token_id;
+
+
 		if ( ! empty( $nmi_csc ) ) {
 			$this->get_order()->payment->csc      = $nmi_csc;
 			$this->request_data['payment']['cvv'] = $nmi_csc;

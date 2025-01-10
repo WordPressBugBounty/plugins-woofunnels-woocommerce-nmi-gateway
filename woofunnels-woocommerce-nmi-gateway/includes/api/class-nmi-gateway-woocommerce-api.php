@@ -410,7 +410,7 @@ class NMI_Gateway_Woocommerce_API extends NMI_Gateway_Woocommerce_Framework\SV_W
 
 			if ( ! empty( $response->customer_vault_id ) ) {
 				$this->get_order()->payment->token    = isset( $response->customer_vault_id ) ? $response->customer_vault_id : '';
-				$this->get_order()->payment->tokenize = $this->get_gateway()->tokenization_enabled();
+				$this->get_order()->payment->tokenize = $this->get_gateway()->supports_tokenization() ? $this->get_gateway()->tokenization_enabled() : false;
 				$this->get_order()->payment->mode     = $this->gateway->get_environment();
 			}
 
@@ -720,6 +720,15 @@ class NMI_Gateway_Woocommerce_API extends NMI_Gateway_Woocommerce_Framework\SV_W
 		}
 		if ( isset( $args['payment']['payment_token'] ) && ! empty( $args['payment']['payment_token'] ) ) {
 			$request_data['payment_token'] = $args['payment']['payment_token']; //Collect.js payment token
+		}
+
+		if ( isset( $args['payment']['payment_token'] ) && ! empty( $args['payment']['payment_token'] ) ) {
+			$request_data['payment_token'] = $args['payment']['payment_token']; //Collect.js payment token
+			if ( ! empty( $args['payment']['customer_vault'] ) && 'add_customer' === $args['payment']['customer_vault'] ) {
+				$request_data['type']                        = 'validate';
+				$request_data['initiated_by']                = 'customer';
+				$request_data['stored_credential_indicator'] = 'stored';
+			}
 		}
 
 		$request_data['currency']         = isset( $args['payment']['currency'] ) ? $args['payment']['currency'] : get_woocommerce_currency();

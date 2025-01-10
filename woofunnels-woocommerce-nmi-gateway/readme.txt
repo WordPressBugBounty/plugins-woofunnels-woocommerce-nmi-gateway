@@ -2,8 +2,8 @@
 Contributors: xlplugins, amans2k
 Tags: WooCommerce, NMI, Payment Gateway, NMI Payment, NMI Gateway, Woocommerce Payment Gateway, XL plugins, PCI compliance
 Requires at least: 5.0
-Tested up to: 6.3.1
-Stable tag: 2.3.1
+Tested up to: 6.7.1
+Stable tag: 2.4.0
 Requires PHP: 7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -72,6 +72,10 @@ Feel free to create a [Support Ticket](https://wordpress.org/support/plugin/woof
 
 
 == Change log ==
+= 2.4.0  (13-01-2025) =
+* Added: Compatibility with WooCommerce v9.5.0
+* Fixed: PHP error about AssertionError resolved.
+* Fixed: Pass additional arguments to the nmi requests in customer vault payments.
 
 = 2.3.0  (25-09-2023) =
 * Fixed: Missing Javascript file from core module.

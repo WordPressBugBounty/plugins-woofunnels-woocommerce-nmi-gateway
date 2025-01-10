@@ -246,12 +246,13 @@ class NMI_Gateway_Woocommerce_Base extends NMI_Gateway_Woocommerce_Framework\SV_
 			'options'  => $this->get_environments(),
 		);
 		$form_fields['payment_api_method'] = array(
-			'title'   => esc_html__( 'Payment API Method', 'woofunnels-woocommerce-nmi-gateway' ),
-			'type'    => 'radio',
-			'id'      => 'payment_api_method',
-			'default' => 'direct_post',
-			'css'     => 'margin:0',
-			'options' => array(
+			'title'       => esc_html__( 'Payment API Method', 'woofunnels-woocommerce-nmi-gateway' ),
+			'type'        => 'radio',
+			'id'          => 'payment_api_method',
+			'default'     => 'direct_post',
+			'css'         => 'margin:0',
+			'description' => __( "<b>Note: Payment Mechanism setting should be checked if you switch to Collect.js method.</b>", 'woofunnels-woocommerce-nmi-gateway' ),
+			'options'     => array(
 				'direct_post' => __( 'Direct Post', 'woocommerce' ),
 				'collect_js'  => __( 'Collect.js (Recommended)', 'woocommerce' ),
 			),
