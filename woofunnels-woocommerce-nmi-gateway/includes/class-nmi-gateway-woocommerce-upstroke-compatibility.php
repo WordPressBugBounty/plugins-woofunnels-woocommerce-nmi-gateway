@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) or exit;
  * Class NMI_Gateway_Woocommerce_Upstroke_Compatibility
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class NMI_Gateway_Woocommerce_Upstroke_Compatibility extends WFOCU_Gateway {
 
 	public $token = false;

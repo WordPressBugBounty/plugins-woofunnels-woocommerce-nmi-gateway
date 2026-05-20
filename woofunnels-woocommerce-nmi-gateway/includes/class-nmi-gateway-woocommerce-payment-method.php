@@ -27,6 +27,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as NMI_Gateway_Woocommerce_Frame
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class NMI_Gateway_Woocommerce_Payment_Method extends NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_Payment_Token {
 
 	/** credit card payment method type */

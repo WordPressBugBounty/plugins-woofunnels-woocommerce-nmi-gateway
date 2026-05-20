@@ -26,6 +26,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as NMI_Gateway_Woocommerce_Frame
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 abstract class NMI_Gateway_Woocommerce_API_Response implements NMI_Gateway_Woocommerce_Framework\SV_WC_API_Response, NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_API_response, NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_API_Authorization_Response, NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_API_Create_Payment_Token_Response, NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_API_Customer_Response {
 
 

@@ -26,6 +26,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as NMI_Gateway_Woocommerce_Frame
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class NMI_Gateway_Woocommerce_API extends NMI_Gateway_Woocommerce_Framework\SV_WC_API_Base implements NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_API {
 
 	/** @var \NMI_Gateway_Woocommerce_API class instance */
@@ -279,6 +280,7 @@ class NMI_Gateway_Woocommerce_API extends NMI_Gateway_Woocommerce_Framework\SV_W
 
 	/**
 	 * Get the tokenized payment methods for the customer
+	 *
 	 * @param string $customer_id
 	 *
 	 * @return object|NMI_Gateway_Woocommerce_Framework\SV_WC_API_Get_Tokenized_Payment_Methods_Response
@@ -734,6 +736,17 @@ class NMI_Gateway_Woocommerce_API extends NMI_Gateway_Woocommerce_Framework\SV_W
 		$request_data['currency']         = isset( $args['payment']['currency'] ) ? $args['payment']['currency'] : get_woocommerce_currency();
 		$request_data['customer_receipt'] = ( 'yes' === $this->get_gateway()->get_option( 'send_gateway_receipt' ) );
 		$request_data['ipaddress']        = isset( $args['ipaddress'] ) ? $args['ipaddress'] : WC_Geolocation::get_ip_address();
+
+		if ( ! empty( $this->get_order() ) ) {
+			if ( empty( $request_data['phone'] ) ) {
+				$request_data['phone'] = $this->get_order()->get_billing_phone();
+			}
+			if ( empty( $request_data['zip'] ) ) {
+				$request_data['zip'] = $this->get_order()->get_billing_postcode();
+			}
+		}
+
+		NMI_Gateway_Woocommerce_Logger::log( 'Final before request data sent to NMI: ' . print_r( $request_data, true ) ); //phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
 
 		$request_data = apply_filters( $this->get_api_id() . '_final_request_data', $request_data, $args );
 

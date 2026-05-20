@@ -28,6 +28,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as NMI_Gateway_Woocommerce_Frame
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class NMI_Gateway_Woocommerce_Payment_Method_Handler extends NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_Payment_Tokens_Handler {
 
 	/**
@@ -300,7 +301,7 @@ class NMI_Gateway_Woocommerce_Payment_Method_Handler extends NMI_Gateway_Woocomm
 	public function create_token( \WC_Order $order, $response = null, $environment_id = null ) {
 
 		$gateway  = $this->get_gateway();
-		$order_id = BWF_WC_Compatibility::get_order_id( $order );
+		$order_id = $order->get_id();
 
 		$order_token = $gateway->get_order_meta( $order, 'payment_token' );
 

@@ -26,6 +26,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as NMI_Gateway_Woocommerce_Frame
  * @since 1.0.0
  * NMI_Gateway_Woocommerce_Credit_Card
  */
+#[AllowDynamicProperties]
 class NMI_Gateway_Woocommerce_Credit_Card extends NMI_Gateway_Woocommerce_Base {
 
 	/** @var string require CSC field */
@@ -430,6 +431,26 @@ class NMI_Gateway_Woocommerce_Credit_Card extends NMI_Gateway_Woocommerce_Base {
 			$( '#woocommerce_<?php echo $this->get_id(); ?>_sandbox_private_key' ).addClass('sandbox-field');
 			}
 			}
+
+			// Auto-check and disable validate_processor when collect_js is selected
+			var $validateProcessor = $( '#woocommerce_<?php echo $this->get_id(); ?>_validate_processor' );
+			var vpName = 'woocommerce_<?php echo $this->get_id(); ?>_validate_processor';
+
+			function handleValidateProcessor() {
+				var selectedMethod = $( 'input[name=woocommerce_<?php echo $this->get_id(); ?>_payment_api_method]:checked' ).val();
+				if ( 'collect_js' === selectedMethod ) {
+					$validateProcessor.prop( 'checked', true ).prop( 'disabled', true );
+					if ( ! $validateProcessor.siblings( 'input[type=hidden][name="' + vpName + '"]' ).length ) {
+						$validateProcessor.after( '<input type="hidden" name="' + vpName + '" value="yes" />' );
+					}
+				} else {
+					$validateProcessor.prop( 'disabled', false );
+					$validateProcessor.siblings( 'input[type=hidden][name="' + vpName + '"]' ).remove();
+				}
+			}
+
+			$( 'input[name=woocommerce_<?php echo $this->get_id(); ?>_payment_api_method]' ).on( 'change', handleValidateProcessor );
+			handleValidateProcessor();
 			<?php
 
 			wc_enqueue_js( ob_get_clean() );
@@ -437,6 +458,27 @@ class NMI_Gateway_Woocommerce_Credit_Card extends NMI_Gateway_Woocommerce_Base {
 		}
 
 	}
+
+
+	/**
+	 * Force validate_processor to 'yes' when payment_api_method is 'collect_js'.
+	 *
+	 * Server-side safety net to ensure the dependency is enforced even if
+	 * JavaScript is bypassed or fails to load.
+	 *
+	 * @since 2.4.1
+	 */
+	public function process_admin_options() {
+
+		parent::process_admin_options();
+
+		$api_method = $this->get_option( 'payment_api_method', 'direct_post' );
+
+		if ( 'collect_js' === $api_method && 'yes' !== $this->get_option( 'validate_processor', 'no' ) ) {
+			$this->update_option( 'validate_processor', 'yes' );
+		}
+	}
+
 
 	/**
 	 * Returns true if the CSC field should be displayed and required at checkout
@@ -507,7 +549,7 @@ class NMI_Gateway_Woocommerce_Credit_Card extends NMI_Gateway_Woocommerce_Base {
 	 * @throws NMI_Gateway_Woocommerce_Framework\SV_WC_Plugin_Exception
 	 */
 	public function do_credit_card_transaction( $order, $response = null ) {
-		$order_id = BWF_WC_Compatibility::get_order_id( $order );
+		$order_id = $order->get_id();
 
 		NMI_Gateway_Woocommerce_Logger::log( "Starting the NMI function: " . __FUNCTION__ . ": For Order_id: $order_id" );
 

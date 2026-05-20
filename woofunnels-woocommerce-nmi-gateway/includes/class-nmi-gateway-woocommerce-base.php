@@ -26,6 +26,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1\SV_WC_Helper;
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class NMI_Gateway_Woocommerce_Base extends NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_Direct {
 
 	/** sandbox environment ID */
@@ -709,7 +710,7 @@ class NMI_Gateway_Woocommerce_Base extends NMI_Gateway_Woocommerce_Framework\SV_
 	 *
 	 */
 	public function mark_order_as_failed( $order, $error_message, $response = null ) {
-		$order_id    = BWF_WC_Compatibility::get_order_id( $order );
+		$order_id    = $order->get_id();
 		$max_retries = apply_filters( 'xl_wc_nmi_max_weekly_failed_retries', 0 );
 		if ( $order_id > 0 && $max_retries > 0 ) {
 			$current_week = 'week_' . date( 'W' );

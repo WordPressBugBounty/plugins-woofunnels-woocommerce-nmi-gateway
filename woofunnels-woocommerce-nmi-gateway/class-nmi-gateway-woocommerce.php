@@ -47,6 +47,7 @@ use SkyVerge\WooCommerce\PluginFramework\v5_2_1 as NMI_Gateway_Woocommerce_Frame
  * ### Order Meta
  *
  */
+#[\AllowDynamicProperties]
 class NMI_Gateway_Woocommerce extends NMI_Gateway_Woocommerce_Framework\SV_WC_Payment_Gateway_Plugin {
 
 	/** plugin version number */
@@ -114,7 +115,6 @@ class NMI_Gateway_Woocommerce extends NMI_Gateway_Woocommerce_Framework\SV_WC_Pa
 		require_once( $vendor_path . '/nmi/nmi_gateway_woocommerce_remote_response.php' );
 
 		// gateways
-		require_once( $this->get_plugin_path() . '/class-nmi-gateway-woocommerce-woofunnels-support.php' );
 		require_once( $this->get_plugin_path() . '/includes/class-nmi-gateway-woocommerce-base.php' );
 		require_once( $this->get_plugin_path() . '/includes/class-nmi-gateway-woocommerce-credit-card.php' );
 

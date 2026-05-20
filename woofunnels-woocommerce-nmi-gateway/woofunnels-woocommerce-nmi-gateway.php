@@ -5,7 +5,7 @@
  * Description: Receive credit card payments using NMI (Network Merchants) Gateway with subscription support. A valid SSL certificate (for security reasons) is required for this gateway to function. Requires PHP 7.0+
  * Author: XLPlugins
  * Author URI: https://xlplugins.com/
- * Version: 2.4.0
+ * Version: 2.5.0
  * Text Domain: woofunnels-woocommerce-nmi-gateway
  * Domain Path: /i18n/languages/
  *
@@ -16,9 +16,9 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Requires at least: 5.0
- * Tested up to: 6.7.1
+ * Tested up to: 7.0.0
  * WC requires at least: 4.0.0
- * WC tested up to: 9.5.2
+ * WC tested up to: 10.8.0
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -38,7 +38,6 @@ define( 'NMI_GATEWAY_WOOCOMMERCE_FILE', __FILE__ );
 define( 'NMI_GATEWAY_WOOCOMMERCE_BASENAME', plugin_basename( __FILE__ ) );
 
 define( 'NMI_GATEWAY_WOOCOMMERCE_VERSION', '2.3.1' );
-define( 'XLNMI_BWF_VERSION', '1.10.11.12' );
 define( 'NMI_GATEWAY_WOOCOMMERCE_FULL_NAME', 'XL NMI Gateway for WooCommerce' );
 
 /**
@@ -94,35 +93,10 @@ class NMI_Gateway_Woocommerce_Loader {
 		// if the environment check fails, initialize the plugin
 		if ( $this->is_environment_compatible() ) {
 			add_action( 'plugins_loaded', array( $this, 'init_plugin' ) );
-
-			$this->load_woofunnels_core_classes();
-
 		}
 
 		/** Redirecting plugin to the settings page after activation */
 		add_action( 'activated_plugin', array( $this, 'nmi_gateway_woocommerce_settings_redirect' ) );
-
-		/**
-		 * Loading WooFunnels core
-		 */
-		add_action( 'plugins_loaded', function () {
-			WooFunnel_Loader::include_core();
-		}, - 1 );
-		if ( is_admin() ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'admin/upsell/class-xlnmi-upsell.php' ); // TODO: main plugin class file
-
-		}
-	}
-
-	/**
-	 * Loading woofunnels core files
-	 */
-	public function load_woofunnels_core_classes() {
-
-		/** Setting Up WooFunnels Core */
-
-		require_once( plugin_dir_path( __FILE__ ) . 'start.php' );
-
 	}
 
 	/**
@@ -166,20 +140,13 @@ class NMI_Gateway_Woocommerce_Loader {
 	 * @param $plugin
 	 */
 	public function nmi_gateway_woocommerce_settings_redirect( $plugin ) {
-		if ( is_woocommerce_active() && class_exists( 'WooCommerce' ) ) {
-			if ( $plugin === plugin_basename( __FILE__ ) && 'blank' === get_option( 'bwf_is_opted', 'blank' ) ) {
-				wp_redirect( add_query_arg( array(
-					'page' => 'woofunnels-woocommerce-nmi-gateway',
-				), admin_url( 'admin.php' ) ) );
-				exit;
-			} elseif ( $plugin === plugin_basename( __FILE__ ) ) {
-				wp_redirect( add_query_arg( array(
-					'page'    => 'wc-settings',
-					'tab'     => 'checkout',
-					'section' => 'nmi_gateway_woocommerce_credit_card',
-				), admin_url( 'admin.php' ) ) );
-				exit;
-			}
+		if ( is_woocommerce_active() && class_exists( 'WooCommerce' ) && $plugin === plugin_basename( __FILE__ ) ) {
+			wp_redirect( add_query_arg( array(
+				'page'    => 'wc-settings',
+				'tab'     => 'checkout',
+				'section' => 'nmi_gateway_woocommerce_credit_card',
+			), admin_url( 'admin.php' ) ) );
+			exit;
 		}
 	}
 
